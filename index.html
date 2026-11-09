@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vinay Mathai Verghese</title>
+  <meta name="description" content="Vinay Mathai Verghese. MBA candidate at IIM Indore with nearly ten years in technology across fintech, automotive and the public sector." />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <style>
+    /* Fonts are hosted in /fonts (SIL Open Font License) so no browser can block them */
+    @font-face { font-family: "Source Serif 4"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/source-serif-4-400.woff2) format("woff2"); }
+    @font-face { font-family: "Source Serif 4"; font-style: normal; font-weight: 600; font-display: swap; src: url(fonts/source-serif-4-600.woff2) format("woff2"); }
+    @font-face { font-family: "Source Serif 4"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/source-serif-4-400-italic.woff2) format("woff2"); }
+    @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; font-display: swap; src: url(fonts/fraunces-italic-variable.woff2) format("woff2"); }
+
+    :root { --bg: #fff; --text: #111; --muted: #666; --rule: #ccc; }
+    [data-theme="dark"] { --bg: #161616; --text: #e4e4e4; --muted: #999; --rule: #444; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+      font-size: 18px; line-height: 1.6;
+      font-feature-settings: "onum" 1, "kern" 1;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+    a:hover { text-decoration-color: var(--text); }
+
+    header { display: flex; justify-content: space-between; align-items: center; padding: 22px 28px; }
+    .name {
+      font-family: "Fraunces", Georgia, serif;
+      font-style: italic; font-weight: 600; font-synthesis: none;
+      font-size: 34px; line-height: 1; text-decoration: none;
+    }
+    .theme {
+      background: none; border: none; color: var(--muted); cursor: pointer;
+      font: inherit; font-size: 14px; font-variant: small-caps; letter-spacing: .04em;
+    }
+    .theme:hover { color: var(--text); }
+    /* Bigger tap areas on touch screens, without changing the look */
+    .theme { padding: 14px 10px; margin: -14px -10px; }
+    nav.links a { display: inline-block; padding: 10px 2px; }
+
+    main { max-width: 640px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    nav.links { text-align: center; font-size: 16px; color: var(--muted); margin-bottom: 48px; }
+    nav.links a { margin: 0 .45em; }
+
+    .intro p + p { margin-top: 14px; }
+
+    h2 {
+      font-size: 15px; font-weight: 600; font-variant: small-caps; letter-spacing: .1em;
+      text-transform: lowercase; color: var(--muted);
+      display: flex; align-items: center; gap: 16px; margin: 52px 0 22px;
+    }
+    h2::before, h2::after { content: ""; flex: 1; border-top: 1px solid var(--rule); }
+
+    .rows { list-style: none; }
+    .rows li { display: grid; grid-template-columns: 92px 1fr; gap: 18px; padding: 7px 0; }
+    .rows .yr { color: var(--muted); font-size: 16px; padding-top: 2px; font-variant-numeric: oldstyle-nums tabular-nums; }
+    .rows .note { color: var(--muted); }
+
+    ul.plain { margin-left: 1.2em; }
+    ul.plain li { margin-top: 6px; }
+    ul.plain li::marker { color: var(--muted); }
+
+    footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: 64px; }
+
+    /* Side section nav, Substack-style: short lines that reveal labels on hover */
+    html { scroll-behavior: smooth; }
+    #summary, h2[id] { scroll-margin-top: 40px; }
+    .toc {
+      position: fixed; left: 32px; top: 50%; transform: translateY(-50%);
+      display: none; flex-direction: column; gap: 4px; z-index: 5;
+    }
+    .toc a {
+      display: flex; align-items: center; gap: 12px; padding: 5px 0;
+      text-decoration: none; color: var(--muted); font-size: 14px;
+    }
+    .toc .bar {
+      width: 14px; height: 1.5px; border-radius: 1px; background: var(--rule);
+      transition: width .25s ease, background-color .25s ease;
+    }
+    .toc .lbl {
+      opacity: 0; transform: translateX(-4px); white-space: nowrap;
+      transition: opacity .2s ease, transform .2s ease, color .2s ease;
+    }
+    .toc:hover .lbl, .toc a:focus-visible .lbl { opacity: 1; transform: none; }
+    .toc a:hover .lbl { color: var(--text); }
+    .toc a:hover .bar { background: var(--muted); }
+    .toc a.active .bar { width: 26px; background: var(--text); }
+    .toc a.active .lbl { color: var(--text); }
+    @media (min-width: 1000px) { .toc { display: flex; } }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .toc .bar, .toc .lbl { transition: none; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 17px; }
+      header { padding: 18px 20px; }
+      .rows li { grid-template-columns: 1fr; gap: 0; padding: 8px 0; }
+    }
+  </style>
+  <script>
+    (function () {
+      var s = localStorage.getItem("theme");
+      var dark = s ? s === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    })();
+  </script>
+</head>
+<body>
+
+  <header>
+    <a href="./" class="name" aria-label="Vinay Mathai Verghese, home">vinay</a>
+    <button class="theme" id="theme" aria-label="Toggle dark mode">dark</button>
+  </header>
+
+  <nav class="toc" aria-label="Sections">
+    <a href="#summary"><span class="bar"></span><span class="lbl">Summary</span></a>
+    <a href="#experience"><span class="bar"></span><span class="lbl">Experience</span></a>
+    <a href="#education"><span class="bar"></span><span class="lbl">Education</span></a>
+    <a href="#beyond"><span class="bar"></span><span class="lbl">Beyond work</span></a>
+    <a href="#built"><span class="bar"></span><span class="lbl">Things I've built</span></a>
+  </nav>
+
+  <main>
+    <nav class="links">
+      <a href="Vinay_Mathai_Verghese.pdf" target="_blank" rel="noopener">Resume</a> ·
+      <a href="https://www.linkedin.com/in/vinayverghese" target="_blank" rel="noopener">LinkedIn</a> ·
+      <a href="mailto:e26vinayv@iimidr.ac.in">Email</a>
+    </nav>
+
+    <div class="intro" id="summary">
+      <p>
+        I'm Vinay, an MBA candidate at IIM Indore with nearly ten years in technology, delivering
+        digital platforms for fintech, automotive and public sector clients. That includes
+        onsite, client-facing work in the US for Ford and Capital One.
+      </p>
+      <p>
+        My work has been about owning delivery end to end: turning stakeholder needs into
+        products and keeping cross-functional teams aligned. I'm now looking at technology
+        consulting and project leadership roles.
+      </p>
+    </div>
+
+    <h2 id="experience">Experience</h2>
+    <ul class="rows">
+      <li><span class="yr">2025–26</span><span>Kite Technology Solutions <span class="note">· led a hosting platform from concept to production</span></span></li>
+      <li><span class="yr">2024–25</span><span>Crayo Tech <span class="note">· citizen engagement platform for a government agency</span></span></li>
+      <li><span class="yr">2022–23</span><span>Carta <span class="note">· customer onboarding for an equity management platform</span></span></li>
+      <li><span class="yr">2019–22</span><span>Ford Motor Company <span class="note">· routing platform that optimised technician scheduling and cut customer wait times</span></span></li>
+      <li><span class="yr">2019</span><span>Capital One <span class="note">· cloud services and deployment pipelines</span></span></li>
+      <li><span class="yr">2014–16</span><span>Al Mulla Group, Kuwait <span class="note">· workflow automation across business units</span></span></li>
+      <li><span class="yr">2012–13</span><span>Cognizant <span class="note">· software quality and user training</span></span></li>
+    </ul>
+
+    <h2 id="education">Education</h2>
+    <ul class="rows">
+      <li><span class="yr">2027</span><span>MBA, Indian Institute of Management Indore</span></li>
+      <li><span class="yr">2018</span><span>M.S. Information Systems Technology, The George Washington University</span></li>
+      <li><span class="yr">2012</span><span>B.Tech Computer Science, VIT University</span></li>
+    </ul>
+
+    <h2 id="beyond">Beyond work</h2>
+    <ul class="plain">
+      <li>Coordinator, Infrastructure Committee at IIM Indore, handling visas and campus affairs for a 58-member cohort.</li>
+      <li>Built a web app that gives my cohort personalised class schedules, exams and attendance, replacing spreadsheet lookups.</li>
+      <li>Founding member of VIT's International Students Committee, which set up the university's first international student program.</li>
+    </ul>
+
+    <h2 id="built">Things I've built</h2>
+    <ul class="rows">
+      <li><span class="yr">macOS</span><span><a href="https://github.com/vinaymve/holdfast" target="_blank" rel="noopener">Holdfast</a> <span class="note">· blocks distracting sites and apps for a set time, with a timer that can't be cheated by changing the clock</span></span></li>
+      <li><span class="yr">macOS</span><span><a href="https://github.com/vinaymve/criss-cross" target="_blank" rel="noopener">CrissCross</a> <span class="note">· plays an animation when the cursor moves from one screen to another</span></span></li>
+      <li><span class="yr">Android</span><span><a href="https://github.com/vinaymve/notif-relay" target="_blank" rel="noopener">Notif Relay</a> <span class="note">· forwards chosen Android notifications to a Mac, end-to-end encrypted</span></span></li>
+      <li><span class="yr">Android</span><span>Glass SMS <span class="note">· SMS app that finds one-time codes on the device, copies them and clears them out</span></span></li>
+      <li><span class="yr">Web</span><span><a href="https://vaartha-sage.vercel.app" target="_blank" rel="noopener">Vaartha</a> <span class="note">· one front page for headlines from six Malayalam news outlets</span></span></li>
+      <li><span class="yr">Web</span><span><a href="https://common-hrs.vercel.app" target="_blank" rel="noopener">Common Hours</a> <span class="note">· finds a fair meeting time for people across time zones</span></span></li>
+    </ul>
+
+    <footer>© <span id="yr">2026</span> Vinay Mathai Verghese</footer>
+  </main>
+
+  <script>
+    document.getElementById("yr").textContent = new Date().getFullYear();
+    var btn = document.getElementById("theme"), root = document.documentElement;
+    function label() { btn.textContent = root.getAttribute("data-theme") === "dark" ? "light" : "dark"; }
+    label();
+    btn.addEventListener("click", function () {
+      var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+      label();
+    });
+
+    // Highlight the side-nav line for the section currently being read
+    var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
+    var targets = links.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+    function markActive() {
+      var line = window.innerHeight * 0.35, idx = 0;
+      targets.forEach(function (el, i) { if (el.getBoundingClientRect().top <= line) idx = i; });
+      // At the very bottom, the last section is the one being read
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) idx = targets.length - 1;
+      links.forEach(function (a, i) { a.classList.toggle("active", i === idx); });
+    }
+    window.addEventListener("scroll", markActive, { passive: true });
+    window.addEventListener("resize", markActive);
+    markActive();
+  </script>
+</body>
+</html>
