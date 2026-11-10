@@ -16,7 +16,12 @@
     @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; font-display: swap; src: url(fonts/fraunces-italic-variable.woff2) format("woff2"); }
 
     :root { --bg: #fff; --text: #111; --muted: #666; --rule: #ccc; }
-    [data-theme="dark"] { --bg: #161616; --text: #e4e4e4; --muted: #999; --rule: #444; }
+    :root { --g1: #f2c08e; --g2: #a8c0f2; --g3: #e6b4cf; --glow: .5; color-scheme: light; }
+    /* Dark follows the device by default; the toggle sets data-theme to override it */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) { --bg: #161616; --text: #e4e4e4; --muted: #999; --rule: #444; --g1: #1b8f86; --g2: #3d46c9; --g3: #7a3fc4; --glow: .38; color-scheme: dark; }
+    }
+    [data-theme="dark"] { --bg: #161616; --text: #e4e4e4; --muted: #999; --rule: #444; --g1: #1b8f86; --g2: #3d46c9; --g3: #7a3fc4; --glow: .38; color-scheme: dark; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -38,10 +43,10 @@
     .theme {
       background: none; border: none; color: var(--muted); cursor: pointer;
       font: inherit; font-size: 14px; font-variant: small-caps; letter-spacing: .04em;
+      padding: 14px 10px; margin: -14px -10px;
     }
     .theme:hover { color: var(--text); }
     /* Bigger tap areas on touch screens, without changing the look */
-    .theme { padding: 14px 10px; margin: -14px -10px; }
     nav.links a { display: inline-block; padding: 10px 2px; }
 
     main { max-width: 640px; margin: 0 auto; padding: 48px 24px 80px; }
@@ -99,6 +104,25 @@
       .toc .bar, .toc .lbl { transition: none; }
     }
 
+    /* Soft blurred colour wash behind the top of the page, slowly drifting */
+    html, body { overflow-x: clip; }
+    body { position: relative; isolation: isolate; }
+    /* Colour wash pinned to the window, so it stays with you as you scroll */
+    .glow {
+      position: fixed; inset: -10%; z-index: -1; pointer-events: none;
+      opacity: var(--glow);
+      transform: translate3d(0, calc(var(--p, 0) * -6vh), 0);   /* drifts gently as you scroll */
+    }
+    /* Soft-edged gradients instead of a blur filter, so Safari animates them smoothly */
+    .glow span { position: absolute; border-radius: 50%; animation: ease-in-out infinite; will-change: transform; }
+    .glow .a { width: 60vmax; height: 60vmax; left: -8%;  top: -6%;   background: radial-gradient(closest-side, var(--g1), transparent); animation-name: orbit-a; animation-duration: 14s; }
+    .glow .b { width: 55vmax; height: 55vmax; right: -8%; top: 12%;   background: radial-gradient(closest-side, var(--g2), transparent); animation-name: orbit-b; animation-duration: 17s; }
+    .glow .c { width: 50vmax; height: 50vmax; left: 28%;  bottom: -8%; background: radial-gradient(closest-side, var(--g3), transparent); animation-name: orbit-c; animation-duration: 20s; }
+    @keyframes orbit-a { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(14vw,10vh) scale(1.12); } 66% { transform: translate(4vw,-6vh) scale(.92); } }
+    @keyframes orbit-b { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(-12vw,12vh) scale(.9); } 66% { transform: translate(-4vw,-8vh) scale(1.12); } }
+    @keyframes orbit-c { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-12vw,-12vh) scale(1.15); } }
+    @media (prefers-reduced-motion: reduce) { .glow span { animation: none; } }
+
     @media (max-width: 560px) {
       body { font-size: 17px; }
       header { padding: 18px 20px; }
@@ -106,14 +130,13 @@
     }
   </style>
   <script>
-    (function () {
-      var s = localStorage.getItem("theme");
-      var dark = s ? s === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-      document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
-    })();
+    // Use a saved choice if the visitor clicked the toggle; otherwise follow the device
+    var saved = localStorage.getItem("theme");
+    if (saved) document.documentElement.setAttribute("data-theme", saved);
   </script>
 </head>
 <body>
+  <div class="glow" aria-hidden="true"><span class="a"></span><span class="b"></span><span class="c"></span></div>
 
   <header>
     <a href="./" class="name" aria-label="Vinay Mathai Verghese, home">vinay</a>
@@ -188,13 +211,17 @@
 
   <script>
     document.getElementById("yr").textContent = new Date().getFullYear();
-    var btn = document.getElementById("theme"), root = document.documentElement;
-    function label() { btn.textContent = root.getAttribute("data-theme") === "dark" ? "light" : "dark"; }
+
+    var btn = document.getElementById("theme"), root = document.documentElement, mq = matchMedia("(prefers-color-scheme: dark)");
+    function isDark() { var t = root.getAttribute("data-theme"); return t ? t === "dark" : mq.matches; }
+    function label() { btn.textContent = isDark() ? "light" : "dark"; }
     label();
+    mq.addEventListener("change", label);
     btn.addEventListener("click", function () {
-      var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
-      localStorage.setItem("theme", next);
+      var next = isDark() ? "light" : "dark";
+      // Picking the device's own setting clears the override, so it follows the device again
+      if ((next === "dark") === mq.matches) { root.removeAttribute("data-theme"); localStorage.removeItem("theme"); }
+      else { root.setAttribute("data-theme", next); localStorage.setItem("theme", next); }
       label();
     });
 
@@ -209,6 +236,14 @@
       links.forEach(function (a, i) { a.classList.toggle("active", i === idx); });
     }
     window.addEventListener("scroll", markActive, { passive: true });
+
+    // Feed scroll progress (0 to 1) to the background so it shifts slightly as you read
+    function setProgress() {
+      var max = document.documentElement.scrollHeight - innerHeight;
+      root.style.setProperty("--p", max > 0 ? (scrollY / max).toFixed(3) : 0);
+    }
+    window.addEventListener("scroll", setProgress, { passive: true });
+    setProgress();
     window.addEventListener("resize", markActive);
     markActive();
   </script>
