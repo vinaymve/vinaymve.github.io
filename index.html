@@ -53,6 +53,21 @@
 
     nav.links { text-align: center; font-size: 16px; color: var(--muted); margin-bottom: 48px; }
     nav.links a { margin: 0 .45em; }
+    nav.links { position: relative; }
+    /* Copy-email button: a small outline icon that turns into a tick once copied */
+    .copy {
+      background: none; border: none; color: var(--muted); cursor: pointer;
+      padding: 10px 6px; margin: 0 0 0 -.35em; vertical-align: middle; line-height: 0;
+    }
+    .copy:hover { color: var(--text); }
+    .copy svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+    .copy .i-done, .copy.done .i-copy { display: none; }
+    .copy.done .i-done { display: inline; }
+    .copied {
+      position: absolute; left: 50%; top: 100%; transform: translateX(-50%);
+      font-size: 13px; opacity: 0; transition: opacity .2s ease; pointer-events: none;
+    }
+    .copied.show { opacity: 1; }
 
     .intro p + p { margin-top: 14px; }
 
@@ -155,7 +170,7 @@
     <nav class="links">
       <a href="Vinay_Mathai_Verghese.pdf" target="_blank" rel="noopener">Resume</a> ·
       <a href="https://www.linkedin.com/in/vinayverghese" target="_blank" rel="noopener">LinkedIn</a> ·
-      <a href="mailto:e26vinayv@iimidr.ac.in">Email</a>
+      <a href="mailto:e26vinayv@iimidr.ac.in">Email</a><button class="copy" id="copy" data-email="e26vinayv@iimidr.ac.in" aria-label="Copy email address" title="Copy email address"><svg class="i-copy" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 3.5v-.5A1.5 1.5 0 0 0 9 1.5H3A1.5 1.5 0 0 0 1.5 3v6A1.5 1.5 0 0 0 3 10.5h.5"/></svg><svg class="i-done" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg></button><span class="copied" id="copied" role="status" aria-live="polite"></span>
     </nav>
 
     <div class="intro" id="summary">
@@ -211,6 +226,24 @@
 
   <script>
     document.getElementById("yr").textContent = new Date().getFullYear();
+
+    // Copy the email address to the clipboard and confirm with a tick
+    var copyBtn = document.getElementById("copy"), copied = document.getElementById("copied"), copyTimer;
+    function fallbackCopy(text) {
+      var t = document.createElement("textarea");
+      t.value = text; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t);
+    }
+    copyBtn.addEventListener("click", function () {
+      var email = copyBtn.getAttribute("data-email");
+      var done = function () {
+        copyBtn.classList.add("done"); copied.textContent = "Email copied"; copied.classList.add("show");
+        clearTimeout(copyTimer);
+        copyTimer = setTimeout(function () { copyBtn.classList.remove("done"); copied.classList.remove("show"); }, 1800);
+      };
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(email).then(done, function () { fallbackCopy(email); done(); });
+      else { fallbackCopy(email); done(); }
+    });
 
     var btn = document.getElementById("theme"), root = document.documentElement, mq = matchMedia("(prefers-color-scheme: dark)");
     function isDark() { var t = root.getAttribute("data-theme"); return t ? t === "dark" : mq.matches; }
